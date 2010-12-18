@@ -9,4 +9,24 @@
           font-family: sans-serif
     %body
       %h1 Delpin
-      %p Hello!
+
+      - if @friends
+        %h2 Network of #{h @name}
+        - if @friends.empty?
+          %p No friends, sorry!
+        - else
+          %ul
+            - @friends.each do |friend|
+              %li
+                %a{ :href => "http://delicious.com/#{h friend}"}=h friend
+                &rarr;
+                ?
+
+
+
+      %h2 Find your Delicious network on Pinboard
+      %form
+        %label{ :for => "name" } Your Delicious username:
+        %input{ :type => "text", :name => "name" }
+        %button Search
+
