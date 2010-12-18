@@ -3,12 +3,12 @@
 require "open-uri"
 require "rubygems"
 require "sinatra"
+require "sinatra/sequel"
 require "haml"
 require "sass"
 require "json"
-require "sequel"
 
-Sequel.connect(ENV['DATABASE_URL'] || 'sqlite:///tmp/delpin.db')
+set :database, (ENV['DATABASE_URL'] || 'sqlite:///tmp/delpin.db')
 
 set :haml, :format => :html5, :attr_wrapper => %{"}
 set :views, lambda { root }
