@@ -10,6 +10,12 @@
     %body
       %h1 Delpin
 
+      %h2 Find your Delicious network on Pinboard
+      %form{ :method => 'get' }
+        %label{ :for => "name" } Your Delicious username:
+        %input{ :type => "text", :name => "name", :value => params[:name] }
+        %button Search
+
       - if @friends
         %h2 Network of #{h @name}
         - if @friends.empty?
@@ -22,11 +28,22 @@
                 &rarr;
                 ?
 
+      %hr
 
+      %h2 Add your Delicious &rarr; Pinboard names for others to find
+      %form{ :method => 'post' }
+        %p
+          %label{ :for => "delicious" } Your Delicious username:
+          %input{ :type => "text", :name => "delicious" }
+        %p
+          %label{ :for => "pinboard" } Your Pinboard username:
+          %input{ :type => "text", :name => "pinboard" }
+        %button Add
 
-      %h2 Find your Delicious network on Pinboard
-      %form
-        %label{ :for => "name" } Your Delicious username:
-        %input{ :type => "text", :name => "name" }
-        %button Search
-
+      %h2 Recently added
+      - if @mappings.empty?
+        %p None yet.
+      - else
+        %ul
+          - @mappings.each do |mapping|
+            %li= mapping

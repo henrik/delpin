@@ -6,6 +6,9 @@ require "sinatra"
 require "haml"
 require "sass"
 require "json"
+require "sequel"
+
+Sequel.connect(ENV['DATABASE_URL'] || 'sqlite:///tmp/delpin.db')
 
 set :haml, :format => :html5, :attr_wrapper => %{"}
 set :views, lambda { root }
@@ -14,6 +17,8 @@ get '/' do
   if @name = params[:name]
     @friends = friends_of(@name)
   end
+
+  @mappings = []
 
   haml :index
 end

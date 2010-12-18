@@ -1,3 +1,4 @@
 sinatra -v 1.0
 haml -v 2.2.3
 json
+sequel
