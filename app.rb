@@ -11,10 +11,10 @@ require "json"
 set :database, (ENV['DATABASE_URL'] || 'sqlite:///tmp/delpin3.db')
 
 migration "create mappings" do
-database.create_table :mappings do
-  primary_key :id
-  text        :delicious
-  text        :pinboard
+  database.create_table :mappings do
+    primary_key :id
+    text        :delicious
+    text        :pinboard
     timestamp   :created_at, :null => false
     timestamp   :updated_at, :null => false
 
