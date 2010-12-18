@@ -8,7 +8,7 @@ Thrown together in less than an hour, for fun, learning Sequel as I went along.
 
 By [Henrik Nyh](http://henrik.nyh.se/) under the MIT license:
 
->  Copyright (c) 2009–2010 Henrik Nyh
+>  Copyright (c) 2010 Henrik Nyh
 >
 >  Permission is hereby granted, free of charge, to any person obtaining a copy
 >  of this software and associated documentation files (the "Software"), to deal
