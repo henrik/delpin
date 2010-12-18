@@ -2,60 +2,72 @@
 %html
   %head
     %meta(http-equiv="Content-Type" content="text/html; charset=utf-8")
-    %title Delpin
+    %title Delicious &rarr; Pinboard username mapper
     %style
       :sass
         body
           font-family: sans-serif
+          > div
+            width: 43%
+            margin-right: 4%
+            padding: 0 1%
+            float: left
+          .footer
+            clear: both
+            padding-top: 20px
   %body
-    %h1 Delpin
+    %h1 Delicious &rarr; Pinboard username mapper
 
-    %h2 Find your Delicious network on Pinboard
-    %form{ :method => 'get' }
-      %label{ :for => "name" } Your Delicious username:
-      %input{ :type => "text", :name => "name", :value => params[:name] }
-      %button Search
+    %div
+      %h2 Add your usernames for others to find
+      %form{ :method => 'post', :action => '' }
+        %p
+          %label{ :for => "delicious" } Your Delicious username:
+          %input{ :type => "text", :name => "delicious" }
+        %p
+          %label{ :for => "pinboard" } Your Pinboard username:
+          %input{ :type => "text", :name => "pinboard" }
+        %button Add
 
-    - if @friends
-      %h2 Network of #{h @name}
-      - if @friends.empty?
-        %p No friends, sorry!
+      %hr
+
+      %h2 Recently added
+      - if @mappings.empty?
+        %p None yet.
       - else
         %ul
-          - @friends.each do |friend|
-            - mapping = Mapping[:delicious => friend.downcase]
+          - @mappings.each do |mapping|
             %li
-              %a{ :href => "http://delicious.com/#{h friend}"}=h friend
+              %a{ :href => "http://delicious.com/#{h mapping.delicious}"}=h mapping.delicious
               &rarr;
-              - if mapping && (pinboard = mapping.pinboard)
-                %a{ :href => "http://pinboard.in/u:#{h pinboard}"}=h pinboard
-              - else
-                Unknown, but try
-                %a{ :href => "http://pinboard.in/u:#{h friend}"}=h friend
+              %a{ :href => "http://pinboard.in/u:#{h mapping.pinboard}"}=h mapping.pinboard
 
-    %hr
+    %div
+      %h2 Find your Delicious network on Pinboard
+      %form{ :method => 'get' }
+        %label{ :for => "name" } Your Delicious username:
+        %input{ :type => "text", :name => "name", :value => params[:name] }
+        %button Search
 
-    %h2 Add your Delicious &rarr; Pinboard names for others to find
-    %form{ :method => 'post', :action => '' }
-      %p
-        %label{ :for => "delicious" } Your Delicious username:
-        %input{ :type => "text", :name => "delicious" }
-      %p
-        %label{ :for => "pinboard" } Your Pinboard username:
-        %input{ :type => "text", :name => "pinboard" }
-      %button Add
+      - if @friends
+        %hr
+        %h2 Network of #{h @name}
+        - if @friends.empty?
+          %p No friends, sorry!
+        - else
+          %ul
+            - @friends.each do |friend|
+              - mapping = Mapping[:delicious => friend.downcase]
+              %li
+                %a{ :href => "http://delicious.com/#{h friend}"}=h friend
+                &rarr;
+                - if mapping && (pinboard = mapping.pinboard)
+                  %a{ :href => "http://pinboard.in/u:#{h pinboard}"}=h pinboard
+                - else
+                  Unknown, but try
+                  %a{ :href => "http://pinboard.in/u:#{h friend}"}=h friend
 
-    %h2 Recently added
-    - if @mappings.empty?
-      %p None yet.
-    - else
-      %ul
-        - @mappings.each do |mapping|
-          %li
-            %a{ :href => "http://delicious.com/#{h mapping.delicious}"}=h mapping.delicious
-            &rarr;
-            %a{ :href => "http://pinboard.in/u:#{h mapping.pinboard}"}=h mapping.pinboard
-    %p
+    %p.footer
       By <a href="http://henrik.nyh.se">Henrik Nyh</a>.
       <a href="https://github.com/henrik/delpin">View source on GitHub</a>.
 
