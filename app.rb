@@ -40,8 +40,9 @@ end
 post '/' do
   delicious = params[:delicious].to_s.downcase
   pinboard = params[:pinboard].to_s.downcase
-  if delicious.empty? || pinboard.empty?
-    return "Please provide both names."
+  pinboard = delicious if pinboard.empty?
+  if delicious.empty?
+    return "Please provide names."
   end
   old_mapping = Mapping[:delicious => delicious]
   if old_mapping
