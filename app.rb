@@ -67,6 +67,8 @@ def friends_of(name)
   data = open("http://feeds.delicious.com/v2/json/networkmembers/#{name}").read
   usernames = JSON.parse(data).map { |values| values["user"] }
   usernames
+rescue OpenURI::HTTPError
+  []
 end
 
 def h(text)
