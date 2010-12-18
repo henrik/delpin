@@ -23,15 +23,20 @@
         - else
           %ul
             - @friends.each do |friend|
+              - mapping = Mapping[:delicious => friend.downcase]
               %li
                 %a{ :href => "http://delicious.com/#{h friend}"}=h friend
                 &rarr;
-                ?
+                - if mapping && (pinboard = mapping.pinboard)
+                  %a{ :href => "http://pinboard.in/u:#{h pinboard}"}=h pinboard
+                - else
+                  Unknown, but try
+                  %a{ :href => "http://pinboard.in/u:#{h friend}"}=h friend
 
       %hr
 
       %h2 Add your Delicious &rarr; Pinboard names for others to find
-      %form{ :method => 'post' }
+      %form{ :method => 'post', :action => '' }
         %p
           %label{ :for => "delicious" } Your Delicious username:
           %input{ :type => "text", :name => "delicious" }
@@ -46,4 +51,7 @@
       - else
         %ul
           - @mappings.each do |mapping|
-            %li= mapping
+            %li
+              %a{ :href => "http://delicious.com/#{h mapping.delicious}"}=h mapping.delicious
+              &rarr;
+              %a{ :href => "http://pinboard.in/u:#{h mapping.pinboard}"}=h mapping.pinboard

@@ -8,7 +8,23 @@ require "haml"
 require "sass"
 require "json"
 
-set :database, (ENV['DATABASE_URL'] || 'sqlite:///tmp/delpin.db')
+set :database, (ENV['DATABASE_URL'] || 'sqlite:///tmp/delpin3.db')
+
+migration "create mappings" do
+database.create_table :mappings do
+  primary_key :id
+  text        :delicious
+  text        :pinboard
+    timestamp   :created_at, :null => false
+    timestamp   :updated_at, :null => false
+
+    index :delicious, :unique => true
+  end
+end
+
+class Mapping < Sequel::Model
+end
+
 
 set :haml, :format => :html5, :attr_wrapper => %{"}
 set :views, lambda { root }
@@ -18,10 +34,34 @@ get '/' do
     @friends = friends_of(@name)
   end
 
-  @mappings = []
+  render_list
+end
 
+post '/' do
+  delicious = params[:delicious].to_s.downcase
+  pinboard = params[:pinboard].to_s.downcase
+  if delicious.empty? || pinboard.empty?
+    return "Please provide both names."
+  end
+  old_mapping = Mapping[:delicious => delicious]
+  if old_mapping
+    old_mapping.update(:pinboard => pinboard, :updated_at => Time.now)
+  else
+    Mapping.create(
+      :delicious => delicious,
+      :pinboard => pinboard,
+      :created_at => Time.now, :updated_at => Time.now
+    )
+  end
+
+  render_list
+end
+
+def render_list
+  @mappings = Mapping.limit(10)
   haml :index
 end
+
 
 def friends_of(name)
   data = open("http://feeds.delicious.com/v2/json/networkmembers/#{name}").read
