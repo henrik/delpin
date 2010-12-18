@@ -58,7 +58,7 @@ post '/' do
 end
 
 def render_list
-  @mappings = Mapping.limit(10)
+  @mappings = Mapping.limit(10).order(:updated_at).reverse
   haml :index
 end
 
