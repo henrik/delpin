@@ -60,7 +60,11 @@ end
 
 get '/export.json' do
   content_type :json
-  Mapping.select(:delicious, :pinboard).order(:delicious).map { |m| m.values }.to_json
+  mappings = Mapping.select(:delicious, :pinboard).order(:delicious)
+  if params[:different]
+    mappings = mappings.where('delicious != pinboard')
+  end
+  mappings.map { |m| m.values }.to_json
 end
 
 def render_list
