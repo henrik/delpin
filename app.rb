@@ -58,6 +58,11 @@ post '/' do
   render_list
 end
 
+get '/export.json' do
+  content_type :json
+  Mapping.select(:delicious, :pinboard).order(:delicious).map { |m| m.values }.to_json
+end
+
 def render_list
   @mappings = Mapping.limit(10).order(:updated_at).reverse
   haml :index

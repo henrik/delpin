@@ -3,6 +3,8 @@
   %head
     %meta(http-equiv="Content-Type" content="text/html; charset=utf-8")
     %title Delicious &rarr; Pinboard username mapper
+    /[if lt IE 9]
+      %script(src="http://html5shiv.googlecode.com/svn/trunk/html5.js")
     %style
       :sass
         body
@@ -12,7 +14,7 @@
             margin-right: 4%
             padding: 0 1%
             float: left
-          .footer
+          footer
             clear: both
             padding-top: 20px
   %body
@@ -68,7 +70,8 @@
                   Unknown, but try
                   %a{ :href => "http://pinboard.in/u:#{h friend}"}=h friend
 
-    %p.footer
-      By <a href="http://henrik.nyh.se">Henrik Nyh</a>.
-      <a href="https://github.com/henrik/delpin">View source on GitHub</a>.
-
+    %footer
+      %p
+        <a href="/export.json">Export all mappings as JSON</a>.
+        By <a href="http://henrik.nyh.se">Henrik Nyh</a>.
+        <a href="https://github.com/henrik/delpin">View source on GitHub</a>.
