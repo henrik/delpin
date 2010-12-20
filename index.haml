@@ -5,6 +5,24 @@
     %title Delicious &rarr; Pinboard username mapper
     /[if lt IE 9]
       %script(src="http://html5shiv.googlecode.com/svn/trunk/html5.js")
+    %script(src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js")
+
+    :javascript
+      function checkIfUsernameExists(username, id) {
+        $.ajax({
+          url: '/pingboard.json',
+          data: { username: username, id: id },
+          success: function(data) {
+            if (data.status == "NO") {
+              $("#friend-"+data.id).html("? <span>(name not on Pinboard)</span>");
+            } else {
+              var encoded_username = $("<div/>").text(username).html();
+              $("#friend-"+data.id).html('maybe <a href="http://pinboard.in/u:'+encoded_username+'">'+encoded_username+'</a> <span>(unverified, in use)</span>');
+            }
+          }
+        });
+      }
+
     %style
       :sass
         body
@@ -14,6 +32,9 @@
             margin-right: 4%
             padding: 0 1%
             float: left
+            .friends
+              span span
+                color: #AAA
           footer
             clear: both
             padding-top: 20px
@@ -58,17 +79,22 @@
         - if @friends.empty?
           %p No friends, sorry!
         - else
-          %ul
-            - @friends.each do |friend|
+          %ul.friends
+            - @friends.each_with_index do |friend, index|
               - mapping = Mapping[:delicious => friend.downcase]
               %li
                 %a{ :href => "http://delicious.com/#{h friend}"}=h friend
                 &rarr;
-                - if mapping && (pinboard = mapping.pinboard)
-                  %a{ :href => "http://pinboard.in/u:#{h pinboard}"}=h pinboard
-                - else
-                  Unknown, but try
-                  %a{ :href => "http://pinboard.in/u:#{h friend}"}=h friend
+                %span{ :id => "friend-#{index}" }
+                  - if mapping && (pinboard = mapping.pinboard)
+                    %a{ :href => "http://pinboard.in/u:#{h pinboard}"}=h pinboard
+                  - else
+                    Unknown, but try
+                    %a{ :href => "http://pinboard.in/u:#{h friend}"}=h friend
+                    :javascript
+                      $(function() {
+                        checkIfUsernameExists(#{friend.to_json}, #{index});
+                      });
 
     %footer
       %p

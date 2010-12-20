@@ -1,6 +1,7 @@
 # By Henrik Nyh <henrik@nyh.se> 2010-12-18 under the MIT license.
 
 require "open-uri"
+require "net/http"
 require "rubygems"
 require "sinatra"
 require "sinatra/sequel"
@@ -66,6 +67,24 @@ get '/export.json' do
   end
   mappings.map { |m| m.values }.to_json
 end
+
+get '/pingboard.json' do
+  content_type :json
+  begin
+    username, id = params[:username], params[:id]
+    http = Net::HTTP.new('pinboard.in', 80)
+    http.read_timeout = 3
+    response = http.request_head("/u:#{username}")
+    if response.code == '200'
+      { :status => 'OK', :id => id }.to_json
+    else
+      { :status => 'NO', :id => id }.to_json
+    end
+  rescue StandardError, Timeout::Error
+    404
+  end
+end
+
 
 def render_list
   @mappings = Mapping.limit(10).order(:updated_at).reverse
